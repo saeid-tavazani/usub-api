@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
 exports.emailValidator = () => {
-  return body("email").trim().isEmail();
+  return body("email").trim().isEmail().isLength({ max: 99 });
 };
 
 exports.passValidator = () => {
@@ -14,11 +14,13 @@ exports.customMadeValidator = (type) => {
 exports.idValidator = () => {
   return body("id").trim().toInt().isInt();
 };
-exports.phoneNumberValidator = () => {
+exports.phoneNumberValidator = (compulsion) => {
   return body("phone")
     .trim()
-    .isLength(11)
     .custom((value) => {
+      if (compulsion == false && value == "") {
+        return true;
+      }
       if (!isIranianPhoneNumber(value)) {
         throw new Error("Invalid Iranian phone number");
       }
