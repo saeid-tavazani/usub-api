@@ -5,13 +5,13 @@ const logger = require("../services/errorLogger");
 
 exports.newUser = (req, res, next) => {
   try {
-    const { email, password, phone, name, family } = req.body;
+    const { email, password, phone, name } = req.body;
     selectuser([email, phone])
       .then((user) => {
         if (user) {
           res.send((errorRequest.message = "user already exists"));
         } else {
-          newUser([name, family, email, generateHashPss(password), phone]).then(
+          newUser([name, email, generateHashPss(password), phone]).then(
             (row) => {
               if (row.affectedRows) {
                 res.send(successNot);

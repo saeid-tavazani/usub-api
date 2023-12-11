@@ -15,7 +15,6 @@ router.post(
     validator([
       emailValidator().notEmpty(),
       customMadeValidator("name").notEmpty(),
-      customMadeValidator("family").optional(),
       passValidator().notEmpty(),
       phoneNumberValidator(false),
     ]),

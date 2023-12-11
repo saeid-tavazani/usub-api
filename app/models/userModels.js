@@ -2,7 +2,7 @@ const connection = require("../../database/mysql");
 
 const selectUserActive = async (value) => {
   const [rows] = await connection.query(
-    "SELECT `id`, CONCAT(`first_name`,' ', `last_name`) AS name, `email`, `password`, `role`, `create_at`, `phone`, `status` FROM `users` WHERE `email`=? AND `status`='active' LIMIT 1",
+    "SELECT `id`, name, `email`, `password`, `role`, `create_at`, `phone`, `status` FROM `users` WHERE `email`=? AND `status`='active' LIMIT 1",
     value
   );
   return rows[0];
@@ -10,7 +10,7 @@ const selectUserActive = async (value) => {
 
 const newUser = async (value) => {
   const [rows] = await connection.query(
-    "INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `phone`) VALUES (?,?,?,?,?)",
+    "INSERT INTO `users`(`name`, `email`, `password`, `phone`) VALUES (?,?,?,?,?)",
     value
   );
   return rows;
