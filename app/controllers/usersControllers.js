@@ -1,6 +1,8 @@
 const { selectuser, newUser } = require("../models/userModels");
 const { errorRequest, successNot } = require("../services/ResponseStatusCodes");
 const { generateHashPss } = require("../services/PasswordHash");
+const logger = require("../services/errorLogger");
+
 exports.newUser = (req, res, next) => {
   try {
     const { email, password, phone, name, family } = req.body;
@@ -22,6 +24,7 @@ exports.newUser = (req, res, next) => {
         res.send(errorRequest);
       });
   } catch (console) {
+    logger.error(error);
     next(error);
   }
 };

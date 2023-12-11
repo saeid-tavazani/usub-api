@@ -2,6 +2,7 @@ const TokenService = require("../services/TokenService");
 const { verifyPass } = require("../services/PasswordHash");
 const { selectUserActive } = require("../models/userModels");
 const { gravatar } = require("../services/Gravatar");
+const logger = require("../services/errorLogger");
 exports.newSession = (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -32,10 +33,11 @@ exports.newSession = (req, res, next) => {
           });
         }
       })
-      .catch((err) => {
+      .catch((error) => {
         res.send({ code: 501, success: false });
       });
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -62,6 +64,7 @@ exports.verifyToken = (req, res, next) => {
       }
     });
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
