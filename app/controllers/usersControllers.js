@@ -2,12 +2,16 @@ const {
   selectuser,
   newUser,
   selectUserId,
-  selectUserActive,
+  selectUserActive,updateUser
 } = require("../models/userModels");
 const { errorRequest, successNot } = require("../services/ResponseStatusCodes");
 const { generateHashPss } = require("../services/PasswordHash");
 const logger = require("../services/errorLogger");
-const picture = gravatar(user.email);
+const { gravatar } = require("../services/Gravatar");
+const TokenService = require("../services/TokenService");
+const { log } = require("winston");
+
+
 
 exports.newUser = (req, res, next) => {
   try {
@@ -42,23 +46,26 @@ exports.editUser = (req, res, next) => {
       .then((user) => {
         const tokenData = TokenService.decode(req.headers.authorization);
         if (user && user.email === tokenData.email) {
-          updateUser([name, family, email, phone, id]).then((row) => {
-            selectUserActive([email]).then((user) => {
-              delete user.password;
-              const picture = gravatar(user.email);
-              res.send({
-                data: { ...user, ...picture },
-                success: true,
-                code: 200,
-                message: "success",
+          updateUser([name, family, email, phone, Number(id)]).then((row) => {
+            if(row.affectedRows){
+              selectUserActive([email]).then(user => {
+                delete user.password;
+                const picture = gravatar(user.email);
+                res.send({
+                  data: { ...user, ...picture },
+                  success: true,
+                  code: 200,
+                  message: "success",
+                });
               });
-            });
+            }
           });
         } else {
           res.send(notEdited);
         }
       })
       .catch((error) => {
+        logger.error(error);
         res.send(errorRequest);
       });
   } catch (error) {

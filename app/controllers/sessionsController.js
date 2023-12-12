@@ -45,7 +45,8 @@ exports.verifyToken = (req, res, next) => {
   try {
     const data = TokenService.decode(req.headers.authorization);
     selectUserActive([data.email]).then((user) => {
-      if (data.password === user.password) {
+      if (user &&data.password === user.password) {
+       
         delete user.password;
         const picture = gravatar(data.email);
         res.send({
