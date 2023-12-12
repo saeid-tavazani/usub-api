@@ -4,7 +4,7 @@ const {
   selectUserId,
   selectUserActive,updateUser
 } = require("../models/userModels");
-const { errorRequest, successNot } = require("../services/ResponseStatusCodes");
+const { errorRequest, successNot,notEdited } = require("../services/ResponseStatusCodes");
 const { generateHashPss } = require("../services/PasswordHash");
 const logger = require("../services/errorLogger");
 const { gravatar } = require("../services/Gravatar");
@@ -41,22 +41,25 @@ exports.newUser = (req, res, next) => {
 
 exports.editUser = (req, res, next) => {
   try {
-    const { email, phone, name, family, id } = req.body;
+    const { email, phone, name, id } = req.body;
     selectUserId([id])
       .then((user) => {
         const tokenData = TokenService.decode(req.headers.authorization);
         if (user && user.email === tokenData.email) {
-          updateUser([name, family, email, phone, Number(id)]).then((row) => {
-            if(row.affectedRows){
+          updateUser([name, email, phone, Number(id)]).then((row) => {
+            if(row){
               selectUserActive([email]).then(user => {
-                delete user.password;
-                const picture = gravatar(user.email);
-                res.send({
-                  data: { ...user, ...picture },
-                  success: true,
-                  code: 200,
-                  message: "success",
-                });
+                if(user){
+
+                  delete user.password;
+                  const picture = gravatar(user.email);
+                  res.send({
+                    data: { ...user, ...picture },
+                    success: true,
+                    code: 200,
+                    message: "success",
+                  });
+                }
               });
             }
           });

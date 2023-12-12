@@ -37,7 +37,7 @@ const updateUser = async (value) => {
     "UPDATE `users` SET `name`=?,`email`=?,`phone`=? WHERE id=?",
     value
   );
-  return rows[0];
+  return rows;
 };
 
 module.exports = {
