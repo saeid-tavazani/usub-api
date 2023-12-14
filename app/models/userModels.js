@@ -50,7 +50,7 @@ const addPeple = async (value) => {
 
 const people = async (value) => {
   const [rows] = await connection.query(
-    "SELECT people.name ,people.type FROM `people` INNER JOIN users ON users.id = people.user_id WHERE id =?",
+    "SELECT people.name ,people.type FROM `people` INNER JOIN users ON users.id = people.user_id WHERE users.id =?",
     value
   );
   return rows;

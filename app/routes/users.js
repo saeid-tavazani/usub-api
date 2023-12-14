@@ -44,7 +44,7 @@ router.put(
 );
 
 router.post(
-  "/Peple",
+  "/people",
   [
     auth,
     idValidator().notEmpty(),
