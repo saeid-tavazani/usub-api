@@ -2,16 +2,21 @@ const {
   selectuser,
   newUser,
   selectUserId,
-  selectUserActive,updateUser
+  selectUserActive,
+  updateUser,
+  addPeple,
+  people,
 } = require("../models/userModels");
-const { errorRequest, successNot,notEdited } = require("../services/ResponseStatusCodes");
+const {
+  errorRequest,
+  successNot,
+  notEdited,
+  success,
+} = require("../services/ResponseStatusCodes");
 const { generateHashPss } = require("../services/PasswordHash");
 const logger = require("../services/errorLogger");
 const { gravatar } = require("../services/Gravatar");
 const TokenService = require("../services/TokenService");
-const { log } = require("winston");
-
-
 
 exports.newUser = (req, res, next) => {
   try {
@@ -46,11 +51,10 @@ exports.editUser = (req, res, next) => {
       .then((user) => {
         const tokenData = TokenService.decode(req.headers.authorization);
         if (user && user.email === tokenData.email) {
-          updateUser([name, email, phone, Number(id)]).then((row) => {
-            if(row){
-              selectUserActive([email]).then(user => {
-                if(user){
-
+          updateUser([name, email, phone, id]).then((row) => {
+            if (row) {
+              selectUserActive([email]).then((user) => {
+                if (user) {
                   delete user.password;
                   const picture = gravatar(user.email);
                   res.send({
@@ -72,6 +76,27 @@ exports.editUser = (req, res, next) => {
         res.send(errorRequest);
       });
   } catch (error) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.addPeple = (req, res, next) => {
+  try {
+    const { id, name, type } = req.body;
+    addPeple([id, name, type]).then((row) => {
+      if (row.affectedRows) {
+        people([id]).then((row) => {
+          res.send({
+            ...success,
+            data: row,
+          });
+        });
+      } else {
+        res.send(errorRequest);
+      }
+    });
+  } catch (console) {
     logger.error(error);
     next(error);
   }

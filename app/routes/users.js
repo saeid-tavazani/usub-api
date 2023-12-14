@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { newUser, editUser } = require("../controllers/usersControllers");
+const {
+  newUser,
+  editUser,
+  addPeple,
+} = require("../controllers/usersControllers");
 const validator = require("../middlewares/validator");
 const { auth } = require("../middlewares/auth");
 
@@ -37,6 +41,17 @@ router.put(
     ]),
   ],
   editUser
+);
+
+router.post(
+  "/Peple",
+  [
+    auth,
+    idValidator().notEmpty(),
+    customMadeValidator("name").notEmpty(),
+    customMadeValidator("type").notEmpty(),
+  ],
+  addPeple
 );
 
 module.exports = router;
