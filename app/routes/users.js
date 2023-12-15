@@ -44,11 +44,22 @@ router.put(
 );
 
 router.post(
-  "/people",
+  "/contact",
   [
     auth,
     idValidator().notEmpty(),
     customMadeValidator("name").notEmpty(),
+    customMadeValidator("type").notEmpty(),
+  ],
+  addPeple
+);
+
+router.post(
+  "/list",
+  [
+    auth,
+    idValidator().notEmpty(),
+    // customMadeValidator("name").notEmpty(),
     customMadeValidator("type").notEmpty(),
   ],
   addPeple
