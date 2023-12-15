@@ -7,6 +7,8 @@ const {
   addList,
   list,
   people,
+  addTransactionL,
+  addTransactionP,
 } = require("../controllers/usersControllers");
 const validator = require("../middlewares/validator");
 const { auth } = require("../middlewares/auth");
@@ -17,6 +19,7 @@ const {
   phoneNumberValidator,
   customMadeValidator,
   idValidator,
+  date,
 } = require("../services/ValidatorService");
 
 router.post(
@@ -66,5 +69,49 @@ router.post(
 );
 
 router.get("/list", [auth, idValidator().notEmpty()], list);
+
+router.post(
+  "/transaction/p",
+  [
+    auth,
+    idValidator().notEmpty(),
+    customMadeValidator("userId").notEmpty(),
+    customMadeValidator("title").notEmpty(),
+    customMadeValidator("amount").notEmpty(),
+    date().notEmpty(),
+    customMadeValidator("type")
+      .custom((value) => {
+        if (value == "receive" || value == "payment") {
+          return true;
+        } else {
+          throw new Error("Only values 'payment' and 'receive' are allowed");
+        }
+      })
+      .notEmpty(),
+  ],
+  addTransactionP
+);
+
+router.post(
+  "/transaction/l",
+  [
+    auth,
+    idValidator().notEmpty(),
+    customMadeValidator("userId").notEmpty(),
+    customMadeValidator("title").notEmpty(),
+    customMadeValidator("amount").notEmpty(),
+    date().notEmpty(),
+    customMadeValidator("type")
+      .custom((value) => {
+        if (value == "receive" || value == "payment") {
+          return true;
+        } else {
+          throw new Error("Only values 'payment' and 'receive' are allowed");
+        }
+      })
+      .notEmpty(),
+  ],
+  addTransactionL
+);
 
 module.exports = router;

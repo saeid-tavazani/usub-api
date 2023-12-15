@@ -28,6 +28,10 @@ exports.phoneNumberValidator = (compulsion) => {
     });
 };
 
+exports.date = () => {
+  return body("date").trim().isDate();
+};
+
 const isIranianPhoneNumber = (value) => {
   return /^09\d{9}$/.test(value);
 };
