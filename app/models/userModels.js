@@ -50,7 +50,7 @@ const addpeople = async (value) => {
 
 const people = async (value) => {
   const [rows] = await connection.query(
-    "SELECT transaction.id AS transactionId, transaction.title, SUM(transaction.amount) AS totalSum, transaction.date, transaction.type ,contact.id , contact.name AS personName ,contact.type AS personType ,contact.remained FROM `contact` INNER JOIN `users` ON users.id = contact.user_id LEFT JOIN `transaction` ON contact.id = transaction.usub_id WHERE users.id =? AND contact.category='contact'",
+    "SELECT t.id transactionId, t.title, SUM(t.amount) totalSum, t.date, t.type, c.id, c.name AS personName, c.type AS personType, c.remained FROM `users` u INNER JOIN `contact` c ON u.id = c.user_id LEFT JOIN `transaction` t ON c.id = t.usub_id WHERE u.id = 10 AND c.category = 'contact' GROUP BY c.id ,t.id;",
     value
   );
   return rows;
@@ -66,7 +66,7 @@ const addList = async (value) => {
 
 const list = async (value) => {
   const [rows] = await connection.query(
-    "SELECT transaction.id AS transactionId, transaction.title, SUM(transaction.amount) AS totalSum, transaction.date ,contact.id , contact.name AS personName ,contact.type AS personType ,contact.remained FROM `contact` INNER JOIN `users` ON users.id = contact.user_id LEFT JOIN `transaction` ON contact.id = transaction.usub_id WHERE users.id =? AND contact.category='list'",
+    "SELECT t.id transactionId, t.title, SUM(t.amount) totalSum, t.date, t.type, c.id, c.name AS personName, c.remained FROM `users` u INNER JOIN `contact` c ON u.id = c.user_id LEFT JOIN `transaction` t ON c.id = t.usub_id WHERE u.id = 10 AND c.category = 'list' GROUP BY c.id ,t.id;",
     value
   );
   return rows;
