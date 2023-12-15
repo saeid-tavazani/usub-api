@@ -1,8 +1,8 @@
 const connection = require("../../database/mysql");
 
-const selectUserActive = async (value) => {
+const selectUserEmail = async (value) => {
   const [rows] = await connection.query(
-    "SELECT `id`, name, `email`, `password`, `role`, `create_at`, `phone`, `status` FROM `users` WHERE `email`=? AND `status`='active' LIMIT 1",
+    "SELECT `id`, name, `email`, `password`, `create_at`, `phone` FROM `users` WHERE `email`=? LIMIT 1",
     value
   );
   return rows[0];
@@ -18,7 +18,7 @@ const newUser = async (value) => {
 
 const selectuser = async (value) => {
   const [rows] = await connection.query(
-    "SELECT id FROM `users` WHERE `email`=? OR phone=? AND `status`='active' LIMIT 1",
+    "SELECT id FROM `users` WHERE `email`=? OR phone=? LIMIT 1",
     value
   );
   return rows[0];
@@ -57,7 +57,7 @@ const people = async (value) => {
 };
 
 module.exports = {
-  selectUserActive,
+  selectUserEmail,
   newUser,
   selectuser,
   updateUser,

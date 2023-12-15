@@ -2,7 +2,7 @@ const {
   selectuser,
   newUser,
   selectUserId,
-  selectUserActive,
+  selectUserEmail,
   updateUser,
   addPeple,
   people,
@@ -30,12 +30,15 @@ exports.newUser = (req, res, next) => {
             (row) => {
               if (row.affectedRows) {
                 res.send(successNot);
+              } else {
+                res.send(errorRequest);
               }
             }
           );
         }
       })
       .catch((error) => {
+        logger.error(error);
         res.send(errorRequest);
       });
   } catch (console) {
@@ -53,7 +56,7 @@ exports.editUser = (req, res, next) => {
         if (user && user.email === tokenData.email) {
           updateUser([name, email, phone, id]).then((row) => {
             if (row) {
-              selectUserActive([email]).then((user) => {
+              selectUserEmail([email]).then((user) => {
                 if (user) {
                   delete user.password;
                   const picture = gravatar(user.email);
