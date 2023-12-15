@@ -8,6 +8,7 @@ const {
   people,
   addList,
   list,
+  addTransaction,
 } = require("../models/userModels");
 const {
   errorRequest,
@@ -132,7 +133,7 @@ exports.people = (req, res, next) => {
   }
 };
 
-exports.addpeople = (req, res, next) => {
+exports.addList = (req, res, next) => {
   try {
     const { id, name, type } = req.body;
     addList([id, name, type])
@@ -167,6 +168,57 @@ exports.list = (req, res, next) => {
           ...success,
           data: row,
         });
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.addTransactionP = (req, res, next) => {
+  try {
+    const { userId, id, title, amount, date, type } = req.body;
+    addTransaction([id, title, amount, date, type])
+      .then((row) => {
+        if (row.affectedRows) {
+          people([userId]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+exports.addTransactionL = (req, res, next) => {
+  try {
+    const { userId, id, title, amount, date, type } = req.body;
+    addTransaction([id, title, amount, date, type])
+      .then((row) => {
+        if (row.affectedRows) {
+          list([userId]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
       })
       .catch((error) => {
         logger.error(error);

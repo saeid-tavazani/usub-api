@@ -58,7 +58,7 @@ const people = async (value) => {
 
 const addList = async (value) => {
   const [rows] = await connection.query(
-    "INSERT INTO `contact`(`user_id`, `name`,remained,category) VALUES (?,?,?,'list')",
+    "INSERT INTO `contact`(`user_id`, `name`,category) VALUES (?,?,'list')",
     value
   );
   return rows;
@@ -67,6 +67,14 @@ const addList = async (value) => {
 const list = async (value) => {
   const [rows] = await connection.query(
     "SELECT transaction.id AS transactionId, transaction.title, SUM(transaction.amount) AS totalSum, transaction.date ,contact.id , contact.name AS personName ,contact.type AS personType ,contact.remained FROM `contact` INNER JOIN `users` ON users.id = contact.user_id LEFT JOIN `transaction` ON contact.id = transaction.usub_id WHERE users.id =? AND contact.category='list'",
+    value
+  );
+  return rows;
+};
+
+const addTransaction = async (value) => {
+  const [rows] = await connection.query(
+    "INSERT INTO `transaction`(`usub_id`, `title`, `amount`, `date`, `type`) VALUES (?,?,?,?,?)",
     value
   );
   return rows;
@@ -82,4 +90,5 @@ module.exports = {
   people,
   addList,
   list,
+  addTransaction,
 };

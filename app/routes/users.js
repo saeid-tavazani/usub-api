@@ -4,6 +4,9 @@ const {
   newUser,
   editUser,
   addpeople,
+  addList,
+  list,
+  people,
 } = require("../controllers/usersControllers");
 const validator = require("../middlewares/validator");
 const { auth } = require("../middlewares/auth");
@@ -54,6 +57,14 @@ router.post(
   addpeople
 );
 
-router.get("/contact", [auth, idValidator().notEmpty()], addpeople);
+router.get("/contact", [auth, idValidator().notEmpty()], people);
+
+router.post(
+  "/list",
+  [auth, idValidator().notEmpty(), customMadeValidator("name").notEmpty()],
+  addList
+);
+
+router.get("/list", [auth, idValidator().notEmpty()], list);
 
 module.exports = router;
