@@ -4,8 +4,10 @@ const {
   selectUserId,
   selectUserEmail,
   updateUser,
-  addPeple,
+  addpeople,
   people,
+  addList,
+  list,
 } = require("../models/userModels");
 const {
   errorRequest,
@@ -84,21 +86,92 @@ exports.editUser = (req, res, next) => {
   }
 };
 
-exports.addPeple = (req, res, next) => {
+exports.addpeople = (req, res, next) => {
   try {
     const { id, name, type } = req.body;
-    addPeple([id, name, type]).then((row) => {
-      if (row.affectedRows) {
-        people([id]).then((row) => {
-          res.send({
-            ...success,
-            data: row,
+    addpeople([id, name, type])
+      .then((row) => {
+        if (row.affectedRows) {
+          people([id]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
           });
-        });
-      } else {
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
         res.send(errorRequest);
-      }
-    });
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.people = (req, res, next) => {
+  try {
+    const { id } = req.body;
+    people([id])
+      .then((row) => {
+        res.send({
+          ...success,
+          data: row,
+        });
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.addpeople = (req, res, next) => {
+  try {
+    const { id, name, type } = req.body;
+    addList([id, name, type])
+      .then((row) => {
+        if (row.affectedRows) {
+          list([id]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.list = (req, res, next) => {
+  try {
+    const { id } = req.body;
+    list([id])
+      .then((row) => {
+        res.send({
+          ...success,
+          data: row,
+        });
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
   } catch (console) {
     logger.error(error);
     next(error);

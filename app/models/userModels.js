@@ -40,7 +40,7 @@ const updateUser = async (value) => {
   return rows;
 };
 
-const addPeple = async (value) => {
+const addpeople = async (value) => {
   const [rows] = await connection.query(
     "INSERT INTO `contact`(`user_id`, `name`, `type`,category) VALUES (?,?,?,'contact')",
     value
@@ -78,7 +78,7 @@ module.exports = {
   selectuser,
   updateUser,
   selectUserId,
-  addPeple,
+  addpeople,
   people,
   addList,
   list,
