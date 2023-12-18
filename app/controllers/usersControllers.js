@@ -286,11 +286,11 @@ exports.deleteTransactionP = (req, res, next) => {
 
 exports.deletePeople = (req, res, next) => {
   try {
-    const { id } = req.body;
-    addpeople([id])
+    const { id, userId } = req.body;
+    deletePeople([id])
       .then((row) => {
         if (row.affectedRows) {
-          people([id]).then((row) => {
+          people([userId]).then((row) => {
             res.send({
               ...success,
               data: row,

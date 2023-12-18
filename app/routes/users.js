@@ -129,5 +129,10 @@ router.delete(
   deleteTransactionL
 );
 
-router.put("/contact", [auth, idValidator().notEmpty()], deletePeople);
+router.put(
+  "/contact",
+  [auth, idValidator().notEmpty(), customMadeValidator("userId").notEmpty()],
+  deletePeople
+);
+
 module.exports = router;
