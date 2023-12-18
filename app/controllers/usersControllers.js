@@ -290,6 +290,8 @@ exports.deletePeople = (req, res, next) => {
     deletepeople([id])
       .then((row) => {
         if (row.affectedRows) {
+          logger.error(row);
+
           people([userId]).then((row) => {
             res.send({
               ...success,
