@@ -287,7 +287,7 @@ exports.deleteTransactionP = (req, res, next) => {
 exports.deletePeople = (req, res, next) => {
   try {
     const { id, userId } = req.body;
-    deletePeople([id])
+    deletepeople([id])
       .then((row) => {
         if (row.affectedRows) {
           people([userId]).then((row) => {
