@@ -9,6 +9,9 @@ const {
   people,
   addTransactionL,
   addTransactionP,
+  deleteTransactionL,
+  deleteTransactionP,
+  deletePeople,
 } = require("../controllers/usersControllers");
 const validator = require("../middlewares/validator");
 const { auth } = require("../middlewares/auth");
@@ -114,4 +117,17 @@ router.post(
   addTransactionL
 );
 
+router.delete(
+  "/transaction/p",
+  [auth, idValidator().notEmpty(), customMadeValidator("userId").notEmpty()],
+  deleteTransactionP
+);
+
+router.delete(
+  "/transaction/l",
+  [auth, idValidator().notEmpty(), customMadeValidator("userId").notEmpty()],
+  deleteTransactionL
+);
+
+router.put("/contact", [auth, idValidator().notEmpty()], deletePeople);
 module.exports = router;

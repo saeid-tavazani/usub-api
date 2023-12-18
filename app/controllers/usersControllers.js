@@ -9,6 +9,8 @@ const {
   addList,
   list,
   addTransaction,
+  deleteTransaction,
+  deletepeople,
 } = require("../models/userModels");
 const {
   errorRequest,
@@ -211,6 +213,84 @@ exports.addTransactionL = (req, res, next) => {
       .then((row) => {
         if (row.affectedRows) {
           list([userId]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.deleteTransactionL = (req, res, next) => {
+  try {
+    const { id, userId } = req.body;
+    deleteTransaction([id])
+      .then((row) => {
+        if (row.affectedRows) {
+          list([userId]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.deleteTransactionP = (req, res, next) => {
+  try {
+    const { userId, id } = req.body;
+    deleteTransaction([id])
+      .then((row) => {
+        if (row.affectedRows) {
+          people([userId]).then((row) => {
+            res.send({
+              ...success,
+              data: row,
+            });
+          });
+        } else {
+          res.send(errorRequest);
+        }
+      })
+      .catch((error) => {
+        logger.error(error);
+        res.send(errorRequest);
+      });
+  } catch (console) {
+    logger.error(error);
+    next(error);
+  }
+};
+
+exports.deletePeople = (req, res, next) => {
+  try {
+    const { id } = req.body;
+    addpeople([id])
+      .then((row) => {
+        if (row.affectedRows) {
+          people([id]).then((row) => {
             res.send({
               ...success,
               data: row,
