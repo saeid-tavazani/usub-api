@@ -289,6 +289,9 @@ exports.deletePeople = (req, res, next) => {
     const { id, userId } = req.body;
     deletepeople([id])
       .then((row) => {
+        console.log('====================================');
+        console.log(row);
+        console.log('====================================');
         if (row.affectedRows) {
           logger.error(row);
 
