@@ -1,4 +1,3 @@
-import {config} from "dotenv"
+require('dotenv').config();
 import bootApplication from "./app/index"
-config();
 bootApplication(3000)
