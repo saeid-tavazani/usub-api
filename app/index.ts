@@ -3,14 +3,14 @@ import { sequelize } from "./models/index";
 const app = express();
 
 require("./middlewares")(app);
-// require("./routes")(app);
+require("./routes")(app);
 require("./middlewares/exception")(app);
 require("./middlewares/404")(app);
 
 sequelize
   .sync()
   .then((res) => {
-    console.log(res);
+    console.log("success sequelize");
   })
   .catch((error) => {
     console.log(error);

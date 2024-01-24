@@ -1,14 +1,29 @@
 import { decode } from "../services/tokenService";
 import { verifyPass } from "../services/passwordHash";
-import { Express, Request, Response, NextFunction } from "express";
-
-// import { selectUserEmail } from"../models/userModels";
+import { Request, Response, NextFunction } from "express";
+import errorLogger from "../services/errorLogger";
+import users from "../models/userModels";
+import { sign } from "../services/tokenService";
 const newSession = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    // const tt =sing({})
+    users
+      .findOne({
+        where: {
+          email: email,
+        },
+      })
+      .then((response) => {
+        if (response && verifyPass(password, response.dataValues.password)) {
+          res.send(sign(response.dataValues));
+        } else {
+          // res.send()
+        }
+      });
   } catch (error) {
-    // logger.error(error);
+    console.log("====================ssss================");
+    console.log(error);
+    errorLogger.error(error);
     next(error);
   }
 };
@@ -17,7 +32,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const data = decode(authorization as string);
   } catch (error) {
-    // logger.error(error);
+    errorLogger.error(error);
     next(error);
   }
 };
