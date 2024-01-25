@@ -1,4 +1,4 @@
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 const getAppSecret = (): Secret | undefined => {
   // Get your secret from process.env or some other configuration
@@ -28,11 +28,11 @@ const verify = (token: string): boolean => {
   }
 };
 
-const decode = (token: string) => {
+const decode = (token: string): string | jwt.JwtPayload | null => {
   const appSecret = getAppSecret();
   if (appSecret) {
-    const aa = jwt.decode(token); // Provide empty options object
-    return aa;
+    const decodedToken = jwt.decode(token);
+    return decodedToken;
   } else {
     throw new Error("APP_SECRET is undefined");
   }
