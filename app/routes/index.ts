@@ -1,7 +1,7 @@
-import sessionRouter  from "./sessions";
-//  users = require("./users");
-import { Express} from 'express';
-module.exports = (app:Express) => {
+import sessionRouter from "./sessions";
+import user from "./user";
+import { Express } from "express";
+module.exports = (app: Express) => {
   app.use("/app/usub/api/v1/session", sessionRouter);
-//   app.use("/app/usub/api/v1/users", users);
+  app.use("/app/usub/api/v1/users", user);
 };

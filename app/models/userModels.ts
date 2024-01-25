@@ -20,7 +20,6 @@ const user = sequelize.define("user", {
   },
   phone: {
     type: DataTypes.STRING(11),
-    defaultValue: null,
   },
 });
 
