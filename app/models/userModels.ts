@@ -18,6 +18,10 @@ const user = sequelize.define("user", {
     type: DataTypes.STRING(75),
     allowNull: false,
   },
+  phone: {
+    type: DataTypes.STRING(11),
+    defaultValue: null,
+  },
 });
 
 export default user;
