@@ -54,7 +54,10 @@ const phoneNumberValidator = (
     return body(valid)
       .trim()
       .custom((value) => {
-        if (compulsion == false && value == "") {
+        if (
+          compulsion == false &&
+          (value == "" || value == undefined || value == null)
+        ) {
           return true;
         }
         if (!isIranianPhoneNumber(value)) {
