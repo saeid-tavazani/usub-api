@@ -25,6 +25,10 @@ const transaction = sequelize.define("transaction", {
     type: DataTypes.ENUM("receive", "payment"),
     defaultValue: "payment",
   },
+  category:{
+    type: DataTypes.ENUM("people", "category"),
+    defaultValue: "people",
+  },
 });
 
 export default transaction;
