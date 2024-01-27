@@ -32,4 +32,32 @@ const newContact = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+
+const newList = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { name, userId } = req.body;
+      category
+        .create({
+          title: name,
+         
+          userId: userId,
+        })
+        .then((response) => {
+          if (response) {
+            res.send(successAdd);
+          } else {
+            res.send(errorNot);
+          }
+        })
+        .catch((error) => {
+          res.send(errorRequest);
+          errorLogger.error(error);
+        });
+    } catch (error) {
+      errorLogger.error(error);
+      next(error);
+    }
+  };
+  
+
 export { newContact };
