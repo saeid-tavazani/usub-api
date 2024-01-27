@@ -32,7 +32,6 @@ const dateValidator = (location = "body", valid = "date") => {
     ? body(valid).trim().isDate()
     : param(valid).trim().isDate();
 };
-
 const idValidator = (location = "body", valid = "id") => {
   return location == "body"
     ? body(valid).trim().toInt().isInt()

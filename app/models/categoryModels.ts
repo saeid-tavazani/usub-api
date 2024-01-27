@@ -1,6 +1,6 @@
 import { sequelize, DataTypes } from "./index";
 
-const transaction = sequelize.define("category", {
+const category = sequelize.define("category", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -27,4 +27,4 @@ const transaction = sequelize.define("category", {
   },
 });
 
-export default transaction;
+export default category;

@@ -7,11 +7,11 @@ const transaction = sequelize.define("transaction", {
     primaryKey: true,
   },
   title: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   amount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   date: {
@@ -19,7 +19,7 @@ const transaction = sequelize.define("transaction", {
     defaultValue: DataTypes.NOW,
   },
   description: {
-    type: DataTypes.STRING(11),
+    type: DataTypes.STRING,
   },
   model: {
     type: DataTypes.ENUM("receive", "payment"),
@@ -28,8 +28,8 @@ const transaction = sequelize.define("transaction", {
   type: {
     type: DataTypes.INTEGER,
     references: {
-      model: "category", // 'fathers' refers to table name
-      key: "id", // 'id' refers to column name in fathers table
+      model: "categories",
+      key: "id",
     },
   },
 });
