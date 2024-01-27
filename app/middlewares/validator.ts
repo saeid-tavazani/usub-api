@@ -27,6 +27,12 @@ const validations = (validations: ValidationChain[]) => {
   };
 };
 
+const dateValidator = (location = "body", valid = "date") => {
+  return location == "body"
+    ? body(valid).trim().isDate()
+    : param(valid).trim().isDate();
+};
+
 const idValidator = (location = "body", valid = "id") => {
   return location == "body"
     ? body(valid).trim().toInt().isInt()
@@ -89,4 +95,5 @@ export {
   emailValidator,
   idValidator,
   customMadeValidator,
+  dateValidator,
 };
