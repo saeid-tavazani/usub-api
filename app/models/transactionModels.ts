@@ -25,9 +25,12 @@ const transaction = sequelize.define("transaction", {
     type: DataTypes.ENUM("receive", "payment"),
     defaultValue: "payment",
   },
-  category:{
-    type: DataTypes.ENUM("people", "category"),
-    defaultValue: "people",
+  type: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "category", // 'fathers' refers to table name
+      key: "id", // 'id' refers to column name in fathers table
+    },
   },
 });
 
