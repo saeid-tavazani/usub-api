@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { verifyPass, generateHashPss } from "../services/passwordHash";
+import { generateHashPss } from "../services/passwordHash";
 import { Request, Response, NextFunction } from "express";
 import errorLogger from "../services/errorLogger";
 import users from "../models/userModels";
@@ -7,6 +7,9 @@ import {
   errorNot,
   errorRequest,
   successNot,
+  successAdd,
+  success,
+  notEdited,
 } from "../services/responseStatusCodes";
 const newUser = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,7 +37,7 @@ const newUser = (req: Request, res: Response, next: NextFunction) => {
             })
             .then((response) => {
               if (response) {
-                res.send(successNot);
+                res.send(successAdd);
               } else {
                 res.send(errorNot);
               }
@@ -50,4 +53,50 @@ const newUser = (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-export { newUser };
+
+const editUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, name, phone, id } = req.body;
+    users
+      .findOne({
+        where: {
+          [Op.or]: [{ email: email }, { phone: phone || "" }],
+        },
+      })
+      .then((response) => {
+        if (response) {
+          res.send({
+            success: false,
+            code: 400,
+            message: "There is a user with this phone number or email",
+          });
+        } else {
+          users
+            .update(
+              { phone: phone, email: email, name: name },
+              {
+                where: {
+                  id: id,
+                },
+              }
+            )
+            .then((response) => {
+              if (response) {
+                res.send(success);
+              } else {
+                res.send(notEdited);
+              }
+            });
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
+export { newUser, editUser };

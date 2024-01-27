@@ -6,8 +6,9 @@ import {
   passValidator,
   phoneNumberValidator,
   customMadeValidator,
+  idValidator,
 } from "../middlewares/validator";
-import { newUser } from "../controllers/userController";
+import { newUser, editUser } from "../controllers/userController";
 
 const router = express.Router();
 
@@ -22,6 +23,20 @@ router.post(
     ]),
   ],
   newUser
+);
+
+router.put(
+  "/edit",
+  [
+    auth,
+    validations([
+      idValidator().notEmpty(),
+      emailValidator().notEmpty(),
+      customMadeValidator("name").notEmpty(),
+      phoneNumberValidator(false).optional(),
+    ]),
+  ],
+  editUser
 );
 
 export default router;
