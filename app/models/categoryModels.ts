@@ -10,7 +10,11 @@ const transaction = sequelize.define("category", {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  model: {
+  type: {
+    type: DataTypes.STRING(100),
+    defaultValue: null,
+  },
+  category: {
     type: DataTypes.ENUM("contact", "tag"),
     defaultValue: "contact",
   },
