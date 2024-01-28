@@ -20,10 +20,10 @@ router.post(
   [
     auth,
     validations([
-      idValidator("body","userId").notEmpty(),
+      idValidator("body", "userId").notEmpty(),
       customMadeValidator("name").notEmpty(),
       customMadeValidator("type").optional(),
-    ]), 
+    ]),
   ],
   newContact
 );
@@ -33,7 +33,7 @@ router.post(
   [
     auth,
     validations([
-      idValidator("body","userId").notEmpty(),
+      idValidator("body", "userId").notEmpty(),
       customMadeValidator("name").notEmpty(),
     ]),
   ],
@@ -48,7 +48,7 @@ router.post(
       idValidator().notEmpty(),
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
-      dateValidator().notEmpty(),
+      dateValidator(true).notEmpty(),
     ]),
   ],
   newTransactionList
@@ -62,11 +62,10 @@ router.post(
       idValidator().notEmpty(),
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
-      dateValidator().notEmpty(),
+      dateValidator(true).notEmpty(),
     ]),
   ],
   newTransactionContact
 );
-
 
 export default router;

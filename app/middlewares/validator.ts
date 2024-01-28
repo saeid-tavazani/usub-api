@@ -10,6 +10,9 @@ const validations = (validations: ValidationChain[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     for (let validation of validations) {
       const result = await validation.run(req);
+      console.log("====================================");
+      console.log(result);
+      console.log("====================================");
       if (result.array().length) break;
     }
 
@@ -27,11 +30,40 @@ const validations = (validations: ValidationChain[]) => {
   };
 };
 
-const dateValidator = (location = "body", valid = "date") => {
-  return location == "body"
-    ? body(valid).trim().isDate()
-    : param(valid).trim().isDate();
+const dateValidator = (
+  compulsion: boolean,
+  location = "body",
+  valid = "date"
+) => {
+  if (location === "body") {
+    return body(valid)
+      .trim()
+      .custom((value) => {
+        if (
+          compulsion === false &&
+          (value === "" || value === undefined || value === null)
+        ) {
+          return true;
+        }
+        if (!isValidDateFormat(value)) {
+          throw new Error("Invalid date format. Use YYYY-MM-DD");
+        }
+        return true;
+      });
+  }
+  return param(valid)
+    .trim()
+    .custom((value) => {
+      if (compulsion === false && value === "") {
+        return true;
+      }
+      if (!isValidDateFormat(value)) {
+        throw new Error("Invalid date format. Use YYYY-MM-DD");
+      }
+      return true;
+    });
 };
+
 const idValidator = (location = "body", valid = "id") => {
   return location == "body"
     ? body(valid).trim().toInt().isInt()
@@ -86,7 +118,11 @@ const phoneNumberValidator = (
 const isIranianPhoneNumber = (value: string) => {
   return /^09\d{9}$/.test(value);
 };
-
+// Custom function to check the validity of the date format
+function isValidDateFormat(dateString: string) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  return regex.test(dateString);
+}
 export {
   validations,
   passValidator,

@@ -66,13 +66,14 @@ const newTransactionList = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type } = req.body;
+    const { amount, date, id, type, title } = req.body;
     transaction
       .create({
         amount: amount,
         date: date,
         type: id,
         model: type,
+        title: title,
       })
       .then((response) => {
         if (response) {
