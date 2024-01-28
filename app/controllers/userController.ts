@@ -61,6 +61,7 @@ const editUser = (req: Request, res: Response, next: NextFunction) => {
       .findOne({
         where: {
           [Op.or]: [{ email: email }, { phone: phone || "" }],
+          id: { [Op.ne]: id },
         },
       })
       .then((response) => {
@@ -73,7 +74,7 @@ const editUser = (req: Request, res: Response, next: NextFunction) => {
         } else {
           users
             .update(
-              { phone: phone, email: email, name: name },
+              { phone: phone, email: email, fullName: name },
               {
                 where: {
                   id: id,
