@@ -48,7 +48,9 @@ router.post(
       idValidator().notEmpty(),
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
+      customMadeValidator("title").notEmpty(),
       dateValidator(true).notEmpty(),
+      customMadeValidator("description").notEmpty(),
     ]),
   ],
   newTransactionList
@@ -63,6 +65,8 @@ router.post(
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
       dateValidator(true).notEmpty(),
+      customMadeValidator("title").notEmpty(),
+      customMadeValidator("description").notEmpty(),
     ]),
   ],
   newTransactionContact

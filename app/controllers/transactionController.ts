@@ -66,7 +66,7 @@ const newTransactionList = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type, title } = req.body;
+    const { amount, date, id, type, title, description } = req.body;
     transaction
       .create({
         amount: amount,
@@ -74,6 +74,7 @@ const newTransactionList = (
         type: id,
         model: type,
         title: title,
+        description: description || null,
       })
       .then((response) => {
         if (response) {
@@ -98,13 +99,15 @@ const newTransactionContact = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type } = req.body;
+    const { amount, date, id, type, title, description } = req.body;
     transaction
       .create({
         amount: amount,
         date: date,
         type: id,
         model: type,
+        title: title,
+        description: description || null,
       })
       .then((response) => {
         if (response) {
