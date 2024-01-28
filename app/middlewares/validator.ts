@@ -10,9 +10,6 @@ const validations = (validations: ValidationChain[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     for (let validation of validations) {
       const result = await validation.run(req);
-      console.log("====================================");
-      console.log(result);
-      console.log("====================================");
       if (result.array().length) break;
     }
 

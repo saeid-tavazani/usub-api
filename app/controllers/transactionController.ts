@@ -7,6 +7,7 @@ import {
   errorNot,
   errorRequest,
   successAdd,
+  success,
 } from "../services/responseStatusCodes";
 const newContact = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -126,4 +127,101 @@ const newTransactionContact = (
   }
 };
 
-export { newContact, newList, newTransactionList, newTransactionContact };
+const getTransactionContact = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+    const { id } = req.body;
+    category
+      .findAll({
+        where: {
+          "$category.userId$": id,
+          "$category.category$": "contact",
+        },
+        include: [
+          {
+            model: transaction,
+            as: "evnt",
+            required: false,
+          },
+        ],
+      })
+      .then((response) => {
+        if (response) {
+          res.send({
+            ...success,
+            data: {
+              response,
+            },
+          });
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
+const getTransactionList = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+    const { id } = req.body;
+    category
+      .findAll({
+        where: {
+          "$category.userId$": id,
+          "$category.category$": "tag",
+        },
+        include: [
+          {
+            model: transaction,
+            as: "evnt",
+            required: false,
+          },
+        ],
+      })
+      .then((response) => {
+        if (response) {
+          res.send({
+            ...success,
+            data: {
+              response,
+            },
+          });
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
+export {
+  newContact,
+  newList,
+  newTransactionList,
+  getTransactionContact,
+  newTransactionContact,
+  getTransactionList,
+};

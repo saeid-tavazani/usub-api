@@ -1,4 +1,5 @@
 import { sequelize, DataTypes } from "./index";
+import user from "./userModels";
 
 const category = sequelize.define("category", {
   id: {
@@ -21,10 +22,11 @@ const category = sequelize.define("category", {
   userId: {
     type: DataTypes.INTEGER,
     references: {
-      model: "users", // 'fathers' refers to table name
+      model: user, // 'fathers' refers to table name
       key: "id", // 'id' refers to column name in fathers table
     },
   },
 });
+
 
 export default category;

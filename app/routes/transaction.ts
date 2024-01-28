@@ -11,6 +11,7 @@ import {
   newList,
   newTransactionContact,
   newTransactionList,
+  getTransactionContact,
 } from "../controllers/transactionController";
 
 const router = express.Router();
@@ -70,6 +71,12 @@ router.post(
     ]),
   ],
   newTransactionContact
+);
+
+router.get(
+  "/contact/transaction",
+  [auth, validations([idValidator().notEmpty()])],
+  getTransactionContact
 );
 
 export default router;

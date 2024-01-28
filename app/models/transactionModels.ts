@@ -1,4 +1,5 @@
 import { sequelize, DataTypes } from "./index";
+import category from "./categoryModels";
 
 const transaction = sequelize.define("transaction", {
   id: {
@@ -28,10 +29,9 @@ const transaction = sequelize.define("transaction", {
   type: {
     type: DataTypes.INTEGER,
     references: {
-      model: "categories",
+      model: category,
       key: "id",
     },
   },
 });
-
 export default transaction;
