@@ -22,7 +22,7 @@ router.post(
     validations([
       idValidator("body","userId").notEmpty(),
       customMadeValidator("name").notEmpty(),
-      customMadeValidator("type").notEmpty(),
+      customMadeValidator("type").optional(),
     ]), 
   ],
   newContact
