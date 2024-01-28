@@ -33,7 +33,7 @@ router.post(
   [
     auth,
     validations([
-      idValidator("userId").notEmpty(),
+      idValidator("body","userId").notEmpty(),
       customMadeValidator("name").notEmpty(),
     ]),
   ],
