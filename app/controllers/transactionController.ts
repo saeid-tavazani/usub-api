@@ -14,7 +14,7 @@ const newContact = (req: Request, res: Response, next: NextFunction) => {
     category
       .create({
         title: name,
-        type: type,
+        type: type || null,
         userId: userId,
       })
       .then((response) => {
