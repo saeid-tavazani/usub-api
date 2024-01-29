@@ -268,6 +268,43 @@ const getCategoryValue = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const updateCategoryContact = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name, type, userId, id } = req.body;
+    category
+      .update(
+        {
+          title: name,
+          type: type || null,
+          userId: userId,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      )
+      .then((response) => {
+        if (response) {
+          getCategory(userId, "contact", res, successAdd);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
 const getTransaction = (
   id: number,
   type: string,
