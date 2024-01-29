@@ -224,6 +224,17 @@ const deletTransactionContact = (
   }
 };
 
+const getCategoryValue = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+    const { userId, type } = req.body;
+    getCategory(userId, type, res);
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
 
 const getTransaction = (
   id: number,
@@ -299,4 +310,5 @@ export {
   getTransactionList,
   deletTransactionContact,
   deletTransactionList,
+  getCategoryValue,
 };
