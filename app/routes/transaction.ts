@@ -13,6 +13,8 @@ import {
   newTransactionList,
   getTransactionContact,
   getTransactionList,
+  deletTransactionContact,
+  deletTransactionList,
 } from "../controllers/transactionController";
 
 const router = express.Router();
@@ -86,6 +88,17 @@ router.get(
   "/list/transaction",
   [auth, validations([idValidator().notEmpty()])],
   getTransactionList
+);
+
+router.delete(
+  "/list/transaction",
+  [auth, validations([idValidator().notEmpty()])],
+  deletTransactionList
+);
+router.delete(
+  "/contact/transaction",
+  [auth, validations([idValidator().notEmpty()])],
+  deletTransactionContact
 );
 
 export default router;
