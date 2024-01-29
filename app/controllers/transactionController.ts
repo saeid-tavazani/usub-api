@@ -67,7 +67,7 @@ const newTransactionList = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type, title, description } = req.body;
+    const { amount, date, id, type, title, description, userId } = req.body;
     transaction
       .create({
         amount: amount,
@@ -79,7 +79,9 @@ const newTransactionList = (
       })
       .then((response) => {
         if (response) {
-          res.send(successAdd);
+          getTransaction(userId, "tag", res, successAdd);
+
+          // res.send(successAdd);
         } else {
           res.send(errorNot);
         }
@@ -100,7 +102,7 @@ const newTransactionContact = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type, title, description } = req.body;
+    const { amount, date, id, type, title, description, userId } = req.body;
     transaction
       .create({
         amount: amount,
@@ -112,7 +114,8 @@ const newTransactionContact = (
       })
       .then((response) => {
         if (response) {
-          res.send(successAdd);
+          getTransaction(userId, "contact", res, successAdd);
+          // res.send(successAdd);
         } else {
           res.send(errorNot);
         }
@@ -136,36 +139,7 @@ const getTransactionContact = (
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { id } = req.body;
-    category
-      .findAll({
-        where: {
-          "$category.userId$": id,
-          "$category.category$": "contact",
-        },
-        include: [
-          {
-            model: transaction,
-            as: "evnt",
-            required: false,
-          },
-        ],
-      })
-      .then((response) => {
-        if (response) {
-          res.send({
-            ...success,
-            data: {
-              response,
-            },
-          });
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
+    getTransaction(id, "contact", res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
@@ -181,43 +155,69 @@ const getTransactionList = (
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { id } = req.body;
-    category
-      .findAll({
-        where: {
-          "$category.userId$": id,
-          "$category.category$": "tag",
-        },
-        include: [
-          {
-            model: transaction,
-            as: "evnt",
-            required: false,
-          },
-        ],
-      })
-      .then((response) => {
-        if (response) {
-          res.send({
-            ...success,
-            data: {
-              response,
-            },
-          });
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
+    getTransaction(id, "tag", res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
   }
 };
 
+const deletTransactionList = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+    const { id } = req.body;
+    getTransaction(id, "tag", res);
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
+const getTransaction = (
+  id: number,
+  type: string,
+  res: Response,
+  ms = success
+) => {
+  category
+    .findAll({
+      where: {
+        "$category.userId$": id,
+        "$category.category$": type,
+      },
+      include: [
+        {
+          model: transaction,
+          as: "evnt",
+          required: false,
+        },
+      ],
+    })
+    .then((response) => {
+      if (response) {
+        res.send({
+          ...ms,
+          data: {
+            response,
+          },
+        });
+      } else {
+        res.send(errorNot);
+      }
+    })
+    .catch((error) => {
+      res.send(errorRequest);
+      errorLogger.error(error);
+    });
+};
+
 export {
+  deletTransactionList,
   newContact,
   newList,
   newTransactionList,
