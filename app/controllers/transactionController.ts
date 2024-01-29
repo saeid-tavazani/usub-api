@@ -9,7 +9,14 @@ import {
   successAdd,
   success,
 } from "../services/responseStatusCodes";
-const newContact = (req: Request, res: Response, next: NextFunction) => {
+
+// **
+const newCategory = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  myValue: string
+) => {
   try {
     const { name, type, userId } = req.body;
     category
@@ -17,10 +24,11 @@ const newContact = (req: Request, res: Response, next: NextFunction) => {
         title: name,
         type: type || null,
         userId: userId,
+        category: myValue,
       })
       .then((response) => {
         if (response) {
-          getCategory(userId, "contact", res, successAdd);
+          getCategoryValue(userId, myValue, res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -34,37 +42,12 @@ const newContact = (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-
-const newList = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { name, userId } = req.body;
-    category
-      .create({
-        title: name,
-        category: "tag",
-        userId: userId,
-      })
-      .then((response) => {
-        if (response) {
-          getCategory(userId, "tag", res, successAdd);
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const newTransactionList = (
+// **
+const newTransaction = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     const { amount, date, id, type, title, description } = req.body;
@@ -79,7 +62,7 @@ const newTransactionList = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(id, "tag", res, successAdd);
+          getTransactionValue(id, myValue, res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -93,77 +76,29 @@ const newTransactionList = (
     next(error);
   }
 };
-
-const newTransactionContact = (
+// **
+const getTransaction = (
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { amount, date, id, type, title, description } = req.body;
-    transaction
-      .create({
-        amount: amount,
-        date: date,
-        type: id,
-        model: type,
-        title: title,
-        description: description || null,
-      })
-      .then((response) => {
-        if (response) {
-          getTransaction(id, "contact", res, successAdd);
-          // res.send(successAdd);
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const getTransactionContact = (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { id } = req.body;
-    getTransaction(id, "contact", res);
+    getTransactionValue(id, myValue, res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
   }
 };
-
-const getTransactionList = (
+// **
+const deletTransaction = (
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
-  try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { id } = req.body;
-    getTransaction(id, "tag", res);
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const deletTransactionList = (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
@@ -177,7 +112,7 @@ const deletTransactionList = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(listId, "tag", res, success);
+          getTransactionValue(listId, myValue, res, success);
         } else {
           res.send(errorNot);
         }
@@ -191,48 +126,17 @@ const deletTransactionList = (
     next(error);
   }
 };
-
-const deletTransactionContact = (
+// **
+const deletCategory = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { contactId, id } = req.body;
-    transaction
-      .destroy({
-        where: {
-          id: id,
-        },
-      })
-      .then((response) => {
-        if (response) {
-          getTransaction(contactId, "contact", res, success);
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const deletCategoryValue = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { userId, id, type } = req.body;
+    const { userId, id } = req.body;
     category
       .destroy({
         where: {
@@ -241,8 +145,7 @@ const deletCategoryValue = (
       })
       .then((response) => {
         if (response) {
-          getCategory(userId, type, res);
-          // getTransaction(contactId, "contact", res, success);
+          getCategoryValue(userId, myValue, res);
         } else {
           res.send(errorNot);
         }
@@ -256,22 +159,29 @@ const deletCategoryValue = (
     next(error);
   }
 };
-const getCategoryValue = (req: Request, res: Response, next: NextFunction) => {
+// **
+const getCategory = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  myValue: string
+) => {
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { userId, type } = req.body;
-    getCategory(userId, type, res);
+    const { userId } = req.body;
+    getCategoryValue(userId, myValue, res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
   }
 };
-
-const updateCategoryContact = (
+// **
+const updateCategory = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     const { name, type, userId, id } = req.body;
@@ -290,7 +200,7 @@ const updateCategoryContact = (
       )
       .then((response) => {
         if (response) {
-          getCategory(userId, "contact", res, successAdd);
+          getCategoryValue(userId, myValue, res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -304,47 +214,12 @@ const updateCategoryContact = (
     next(error);
   }
 };
-
-const updateCategoryList = (
+// **
+const updateTransaction = (
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { name, userId, id } = req.body;
-    category
-      .update(
-        {
-          title: name,
-          userId: userId,
-        },
-        {
-          where: {
-            id: id,
-          },
-        }
-      )
-      .then((response) => {
-        if (response) {
-          getCategory(userId, "tag", res, successAdd);
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const updateTransactionList = (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  next: NextFunction,
+  myValue: string
 ) => {
   try {
     const { amount, date, id, type, title, description, transactionId } =
@@ -364,7 +239,7 @@ const updateTransactionList = (
       )
       .then((response) => {
         if (response) {
-          getTransaction(id, "tag", res, successAdd);
+          getTransactionValue(id, myValue, res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -379,41 +254,7 @@ const updateTransactionList = (
   }
 };
 
-const updateTransactionContact = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { amount, date, id, type, title, description } = req.body;
-    transaction
-      .create({
-        amount: amount,
-        date: date,
-        type: id,
-        model: type,
-        title: title,
-        description: description || null,
-      })
-      .then((response) => {
-        if (response) {
-          getTransaction(id, "contact", res, successAdd);
-          // res.send(successAdd);
-        } else {
-          res.send(errorNot);
-        }
-      })
-      .catch((error) => {
-        res.send(errorRequest);
-        errorLogger.error(error);
-      });
-  } catch (error) {
-    errorLogger.error(error);
-    next(error);
-  }
-};
-
-const getTransaction = (
+const getTransactionValue = (
   id: number,
   type: string,
   res: Response,
@@ -452,7 +293,12 @@ const getTransaction = (
     });
 };
 
-const getCategory = (id: number, type: string, res: Response, ms = success) => {
+const getCategoryValue = (
+  id: number,
+  type: string,
+  res: Response,
+  ms = success
+) => {
   category
     .findAll({
       where: {
@@ -479,16 +325,13 @@ const getCategory = (id: number, type: string, res: Response, ms = success) => {
 };
 
 export {
-  newContact,
-  newList,
-  newTransactionContact,
-  newTransactionList,
-  getTransactionContact,
-  getTransactionList,
-  deletTransactionContact,
-  deletTransactionList,
-  deletCategoryValue,
-  getCategoryValue,
-  updateCategoryContact,
-  updateCategoryList,
+  newCategory,
+  getTransaction,
+  deletTransaction,
+  deletCategory,
+  getCategory,
+  updateCategory,
+  // updateCategoryList,
+  updateTransaction,
+  newTransaction,
 };

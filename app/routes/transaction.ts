@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import auth from "../middlewares/auth";
 import {
   validations,
@@ -7,14 +7,13 @@ import {
   dateValidator,
 } from "../middlewares/validator";
 import {
-  newContact,
-  newList,
-  newTransactionContact,
-  newTransactionList,
-  getTransactionContact,
-  getTransactionList,
-  deletTransactionContact,
-  deletTransactionList,
+  newCategory,
+  newTransaction,
+  deletTransaction,
+  deletCategory,
+  getTransaction,
+  getCategory,
+  updateCategory,updateTransaction
 } from "../controllers/transactionController";
 
 const router = express.Router();
@@ -29,9 +28,10 @@ router.post(
       customMadeValidator("type").optional(),
     ]),
   ],
-  newContact
+  (req: Request, res: Response, next: NextFunction) => {
+    newCategory(req, res, next, "contact");
+  }
 );
-
 router.post(
   "/list",
   [
@@ -41,9 +41,10 @@ router.post(
       customMadeValidator("name").notEmpty(),
     ]),
   ],
-  newList
+  (req: Request, res: Response, next: NextFunction) => {
+    newCategory(req, res, next, "tag");
+  }
 );
-
 router.post(
   "/list/transaction",
   [
@@ -55,19 +56,20 @@ router.post(
       customMadeValidator("title").notEmpty(),
       dateValidator(true).notEmpty(),
       customMadeValidator("description").notEmpty(),
-      idValidator("body", "userId").notEmpty(),
+      // idValidator("body", "userId").notEmpty(),
     ]),
   ],
-  newTransactionList
+  (req: Request, res: Response, next: NextFunction) => {
+    newTransaction(req, res, next, "tag");
+  }
 );
-
 router.post(
   "/contact/transaction",
   [
     auth,
     validations([
       idValidator().notEmpty(),
-      idValidator("body", "userId").notEmpty(),
+      // idValidator("body", "userId").notEmpty(),
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
       dateValidator(true).notEmpty(),
@@ -75,31 +77,132 @@ router.post(
       customMadeValidator("description").notEmpty(),
     ]),
   ],
-  newTransactionContact
+  (req: Request, res: Response, next: NextFunction) => {
+    newTransaction(req, res, next, "contact");
+  }
 );
 
 router.get(
   "/contact/transaction",
   [auth, validations([idValidator().notEmpty()])],
-  getTransactionContact
+  (req: Request, res: Response, next: NextFunction) => {
+    getCategory(req, res, next, "contact");
+  }
 );
-
 router.get(
   "/list/transaction",
   [auth, validations([idValidator().notEmpty()])],
-  getTransactionList
+  (req: Request, res: Response, next: NextFunction) => {
+    getCategory(req, res, next, "tag");
+  }
+);
+router.get(
+  "/contact/transaction",
+  [auth, validations([idValidator().notEmpty()])],
+  (req: Request, res: Response, next: NextFunction) => {
+    getTransaction(req, res, next, "contact");
+  }
+);
+router.get(
+  "/list/transaction",
+  [auth, validations([idValidator().notEmpty()])],
+  (req: Request, res: Response, next: NextFunction) => {
+    getTransaction(req, res, next, "tag");
+  }
+);
+
+router.put(
+  "/list/transaction",
+  [
+    auth,
+    validations([
+      idValidator().notEmpty(),
+      idValidator("body", "userId").notEmpty(),
+      customMadeValidator("name").notEmpty(),
+    ]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    updateCategory(req, res, next, "tag");
+  }
+);
+router.put(
+  "/contact/transaction",
+  [
+    auth,
+    validations([
+      idValidator().notEmpty(),
+      idValidator("body", "userId").notEmpty(),
+      customMadeValidator("name").notEmpty(),
+      customMadeValidator("type").notEmpty(),
+    ]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    updateCategory(req, res, next, "contact");
+  }
+);
+router.put(
+  "/list/transaction",
+  [
+    auth,
+    validations([
+      idValidator().notEmpty(),
+      idValidator("body", "userId").notEmpty(),
+      customMadeValidator("name").notEmpty(),
+    ]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    updateTransaction(req, res, next, "tag");
+  }
+);
+router.put(
+  "/contact/transaction",
+  [
+    auth,
+    validations([
+      idValidator().notEmpty(),
+      idValidator("body", "userId").notEmpty(),
+      customMadeValidator("name").notEmpty(),
+      customMadeValidator("type").notEmpty(),
+    ]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    updateTransaction(req, res, next, "contact");
+  }
 );
 
 router.delete(
   "/list/transaction",
   [auth, validations([idValidator().notEmpty()])],
-  deletTransactionList
+  (req: Request, res: Response, next: NextFunction) => {
+    deletTransaction(req, res, next, "tag");
+  }
 );
-
 router.delete(
   "/contact/transaction",
   [auth, validations([idValidator().notEmpty()])],
-  deletTransactionContact
+  (req: Request, res: Response, next: NextFunction) => {
+    deletTransaction(req, res, next, "contact");
+  }
+);
+router.delete(
+  "/contact/transaction",
+  [
+    auth,
+    validations([idValidator().notEmpty(), idValidator("body", "userId")]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    deletCategory(req, res, next, "contact");
+  }
+);
+router.delete(
+  "/list/transaction",
+  [
+    auth,
+    validations([idValidator().notEmpty(), idValidator("body", "userId")]),
+  ],
+  (req: Request, res: Response, next: NextFunction) => {
+    deletCategory(req, res, next, "tag");
+  }
 );
 
 export default router;
