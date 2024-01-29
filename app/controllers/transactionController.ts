@@ -20,7 +20,7 @@ const newContact = (req: Request, res: Response, next: NextFunction) => {
       })
       .then((response) => {
         if (response) {
-          res.send(successAdd);
+          getCategory(userId, "contact", res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -46,7 +46,7 @@ const newList = (req: Request, res: Response, next: NextFunction) => {
       })
       .then((response) => {
         if (response) {
-          res.send(successAdd);
+          getCategory(userId, "tag", res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -67,7 +67,7 @@ const newTransactionList = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type, title, description, userId } = req.body;
+    const { amount, date, id, type, title, description } = req.body;
     transaction
       .create({
         amount: amount,
@@ -79,9 +79,7 @@ const newTransactionList = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(userId, "tag", res, successAdd);
-
-          // res.send(successAdd);
+          getTransaction(id, "tag", res, successAdd);
         } else {
           res.send(errorNot);
         }
@@ -102,7 +100,7 @@ const newTransactionContact = (
   next: NextFunction
 ) => {
   try {
-    const { amount, date, id, type, title, description, userId } = req.body;
+    const { amount, date, id, type, title, description } = req.body;
     transaction
       .create({
         amount: amount,
@@ -114,7 +112,7 @@ const newTransactionContact = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(userId, "contact", res, successAdd);
+          getTransaction(id, "contact", res, successAdd);
           // res.send(successAdd);
         } else {
           res.send(errorNot);
@@ -170,7 +168,7 @@ const deletTransactionList = (
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { id } = req.body;
+    const { listId, id } = req.body;
     transaction
       .destroy({
         where: {
@@ -179,7 +177,7 @@ const deletTransactionList = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(id, "tag", res, success);
+          getTransaction(listId, "tag", res, success);
         } else {
           res.send(errorNot);
         }
@@ -202,7 +200,7 @@ const deletTransactionContact = (
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
-    const { id } = req.body;
+    const { contactId, id } = req.body;
     transaction
       .destroy({
         where: {
@@ -211,7 +209,7 @@ const deletTransactionContact = (
       })
       .then((response) => {
         if (response) {
-          getTransaction(id, "contact", res, success);
+          getTransaction(contactId, "contact", res, success);
         } else {
           res.send(errorNot);
         }
@@ -225,6 +223,8 @@ const deletTransactionContact = (
     next(error);
   }
 };
+
+
 const getTransaction = (
   id: number,
   type: string,
@@ -234,7 +234,8 @@ const getTransaction = (
   category
     .findAll({
       where: {
-        "$category.userId$": id,
+        // "$category.userId$": id,
+        "$category.id$": id,
         "$category.category$": type,
       },
       include: [
@@ -263,13 +264,39 @@ const getTransaction = (
     });
 };
 
+const getCategory = (id: number, type: string, res: Response, ms = success) => {
+  category
+    .findAll({
+      where: {
+        "$category.category$": type,
+        "$category.userId$": id,
+      },
+    })
+    .then((response) => {
+      if (response) {
+        res.send({
+          ...ms,
+          data: {
+            response,
+          },
+        });
+      } else {
+        res.send(errorNot);
+      }
+    })
+    .catch((error) => {
+      res.send(errorRequest);
+      errorLogger.error(error);
+    });
+};
+
 export {
-  deletTransactionList,
   newContact,
   newList,
+  newTransactionContact,
   newTransactionList,
   getTransactionContact,
-  newTransactionContact,
   getTransactionList,
   deletTransactionContact,
+  deletTransactionList,
 };

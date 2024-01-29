@@ -95,6 +95,7 @@ router.delete(
   [auth, validations([idValidator().notEmpty()])],
   deletTransactionList
 );
+
 router.delete(
   "/contact/transaction",
   [auth, validations([idValidator().notEmpty()])],
