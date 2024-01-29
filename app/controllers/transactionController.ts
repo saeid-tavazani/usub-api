@@ -224,6 +224,38 @@ const deletTransactionContact = (
   }
 };
 
+const deletCategoryValue = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+    const { userId, id, type } = req.body;
+    category
+      .destroy({
+        where: {
+          id: id,
+        },
+      })
+      .then((response) => {
+        if (response) {
+          getCategory(userId, type, res);
+          // getTransaction(contactId, "contact", res, success);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
 const getCategoryValue = (req: Request, res: Response, next: NextFunction) => {
   try {
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
@@ -310,5 +342,6 @@ export {
   getTransactionList,
   deletTransactionContact,
   deletTransactionList,
+  deletCategoryValue,
   getCategoryValue,
 };
