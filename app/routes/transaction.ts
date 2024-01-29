@@ -13,7 +13,8 @@ import {
   deletCategory,
   getTransaction,
   getCategory,
-  updateCategory,updateTransaction
+  updateCategory,
+  updateTransaction,
 } from "../controllers/transactionController";
 
 const router = express.Router();
