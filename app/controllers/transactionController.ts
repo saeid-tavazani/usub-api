@@ -10,7 +10,6 @@ import {
   success,
 } from "../services/responseStatusCodes";
 
-// **
 const newCategory = (
   req: Request,
   res: Response,
@@ -42,7 +41,6 @@ const newCategory = (
     next(error);
   }
 };
-// **
 const newTransaction = (
   req: Request,
   res: Response,
@@ -76,7 +74,6 @@ const newTransaction = (
     next(error);
   }
 };
-// **
 const getTransaction = (
   req: Request,
   res: Response,
@@ -93,7 +90,6 @@ const getTransaction = (
     next(error);
   }
 };
-// **
 const deletTransaction = (
   req: Request,
   res: Response,
@@ -126,7 +122,6 @@ const deletTransaction = (
     next(error);
   }
 };
-// **
 const deletCategory = (
   req: Request,
   res: Response,
@@ -159,7 +154,6 @@ const deletCategory = (
     next(error);
   }
 };
-// **
 const getCategory = (
   req: Request,
   res: Response,
@@ -176,7 +170,6 @@ const getCategory = (
     next(error);
   }
 };
-// **
 const updateCategory = (
   req: Request,
   res: Response,
@@ -214,7 +207,6 @@ const updateCategory = (
     next(error);
   }
 };
-// **
 const updateTransaction = (
   req: Request,
   res: Response,
@@ -292,7 +284,6 @@ const getTransactionValue = (
       errorLogger.error(error);
     });
 };
-
 const getCategoryValue = (
   id: number,
   type: string,
