@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 import errorLogger from "../services/errorLogger";
 import category from "../models/categoryModels";
 import transaction from "../models/transactionModels";
