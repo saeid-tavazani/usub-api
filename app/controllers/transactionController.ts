@@ -341,6 +341,78 @@ const updateCategoryList = (
   }
 };
 
+const updateTransactionList = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { amount, date, id, type, title, description, transactionId } =
+      req.body;
+    transaction
+      .update(
+        {
+          amount: amount,
+          date: date,
+          model: type,
+          title: title,
+          description: description || null,
+        },
+        {
+          where: { id: transactionId },
+        }
+      )
+      .then((response) => {
+        if (response) {
+          getTransaction(id, "tag", res, successAdd);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
+const updateTransactionContact = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { amount, date, id, type, title, description } = req.body;
+    transaction
+      .create({
+        amount: amount,
+        date: date,
+        type: id,
+        model: type,
+        title: title,
+        description: description || null,
+      })
+      .then((response) => {
+        if (response) {
+          getTransaction(id, "contact", res, successAdd);
+          // res.send(successAdd);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
 const getTransaction = (
   id: number,
   type: string,
@@ -417,4 +489,6 @@ export {
   deletTransactionList,
   deletCategoryValue,
   getCategoryValue,
+  updateCategoryContact,
+  updateCategoryList,
 };
