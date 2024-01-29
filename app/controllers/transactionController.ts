@@ -305,6 +305,42 @@ const updateCategoryContact = (
   }
 };
 
+const updateCategoryList = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name, userId, id } = req.body;
+    category
+      .update(
+        {
+          title: name,
+          userId: userId,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      )
+      .then((response) => {
+        if (response) {
+          getCategory(userId, "tag", res, successAdd);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
 const getTransaction = (
   id: number,
   type: string,
