@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, response } from "express";
 import errorLogger from "../services/errorLogger";
 import category from "../models/categoryModels";
 import transaction from "../models/transactionModels";
@@ -171,7 +171,23 @@ const deletTransactionList = (
     category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
     transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { id } = req.body;
-    getTransaction(id, "tag", res);
+    transaction
+      .destroy({
+        where: {
+          id: id,
+        },
+      })
+      .then((response) => {
+        if (response) {
+          getTransaction(id, "tag", res, success);
+        } else {
+          res.send(errorNot);
+        }
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
   } catch (error) {
     errorLogger.error(error);
     next(error);
