@@ -1,12 +1,7 @@
-import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-const getAppSecret = (): Secret | undefined => {
-  // Get your secret from process.env or some other configuration
-  return process.env.APP_SECRET;
-};
-
+const appSecret: string = "1b8f3a6e9d0c7b2f6e1d3f7c8b3a9d4b2c6e1d3f";
 const sign = (data: object) => {
-  const appSecret = getAppSecret();
   if (appSecret) {
     return jwt.sign(data, appSecret, { expiresIn: "48h" });
   } else {
@@ -15,7 +10,6 @@ const sign = (data: object) => {
 };
 
 const verify = (token: string): boolean => {
-  const appSecret = getAppSecret();
   if (appSecret) {
     try {
       jwt.verify(token, appSecret);
@@ -29,7 +23,6 @@ const verify = (token: string): boolean => {
 };
 
 const decode = (token: string): string | jwt.JwtPayload | null => {
-  const appSecret = getAppSecret();
   if (appSecret) {
     const decodedToken = jwt.decode(token);
     return decodedToken;
