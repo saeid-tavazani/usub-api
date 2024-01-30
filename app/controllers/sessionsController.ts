@@ -7,6 +7,10 @@ import {
   errorNot,
   errorRequest,
   successNot,
+  notEdited,
+  success,
+  successAdds,
+  successAdd,
 } from "../services/responseStatusCodes";
 const newSession = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,7 +23,7 @@ const newSession = (req: Request, res: Response, next: NextFunction) => {
       })
       .then((response) => {
         if (response && verifyPass(password, response.dataValues.password)) {
-          res.send(sign(response.dataValues));
+          res.send({ token: sign(response.dataValues) });
         } else {
           res.send(errorNot);
         }
