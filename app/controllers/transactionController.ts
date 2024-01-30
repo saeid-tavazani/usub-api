@@ -10,6 +10,9 @@ import {
   success,
 } from "../services/responseStatusCodes";
 
+category.hasMany(transaction, { foreignKey: "type", as: "categoryEvnt" });
+transaction.belongsTo(category, { foreignKey: "type", as: "transactionEvnt" });
+
 const newCategory = (
   req: Request,
   res: Response,
@@ -51,12 +54,12 @@ const newTransaction = (
     const { amount, date, id, type, title, description } = req.body;
     transaction
       .create({
+        title: title,
         amount: amount,
         date: date,
-        type: id,
-        model: type,
-        title: title,
         description: description || null,
+        model: type,
+        type: id,
       })
       .then((response) => {
         if (response) {
@@ -81,8 +84,6 @@ const getTransaction = (
   myValue: string
 ) => {
   try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { id } = req.body;
     getTransactionValue(id, myValue, res);
   } catch (error) {
@@ -97,8 +98,6 @@ const deletTransaction = (
   myValue: string
 ) => {
   try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { listId, id } = req.body;
     transaction
       .destroy({
@@ -129,8 +128,6 @@ const deletCategory = (
   myValue: string
 ) => {
   try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { userId, id } = req.body;
     category
       .destroy({
@@ -161,8 +158,6 @@ const getCategory = (
   myValue: string
 ) => {
   try {
-    category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-    transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
     const { userId } = req.body;
     getCategoryValue(userId, myValue, res);
   } catch (error) {
@@ -246,23 +241,21 @@ const updateTransaction = (
   }
 };
 
-const getTransactionValue = (
-  id: number,
-  type: string,
-  res: Response,
-  ms = success
-) => {
+const getTransactionValue = (id: number, type: string, res: Response, ms = success) => {
+  // Ensure that associations use the same alias
+  category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+  transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
+
   category
     .findAll({
       where: {
-        // "$category.userId$": id,
         "$category.id$": id,
         "$category.category$": type,
       },
       include: [
         {
           model: transaction,
-          as: "evnt",
+          as: "categoryEvnt", // Use the same alias as defined in the association
           required: false,
         },
       ],
@@ -282,14 +275,20 @@ const getTransactionValue = (
     .catch((error) => {
       res.send(errorRequest);
       errorLogger.error(error);
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
     });
 };
+
 const getCategoryValue = (
   id: number,
   type: string,
   res: Response,
   ms = success
 ) => {
+  // category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
+  // transaction.belongsTo(category, { foreignKey: "type", as: "evnts" });
   category
     .findAll({
       where: {
@@ -312,6 +311,7 @@ const getCategoryValue = (
     .catch((error) => {
       res.send(errorRequest);
       errorLogger.error(error);
+     
     });
 };
 

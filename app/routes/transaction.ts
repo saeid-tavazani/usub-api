@@ -70,11 +70,10 @@ router.post(
     auth,
     validations([
       idValidator().notEmpty(),
-      // idValidator("body", "userId").notEmpty(),
       customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
-      dateValidator(true).notEmpty(),
       customMadeValidator("title").notEmpty(),
+      dateValidator(true).notEmpty(),
       customMadeValidator("description").notEmpty(),
     ]),
   ],
@@ -84,15 +83,15 @@ router.post(
 );
 
 router.get(
-  "/contact/transaction",
-  [auth, validations([idValidator().notEmpty()])],
+  "/contact",
+  [auth, validations([idValidator("body", "userId").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getCategory(req, res, next, "contact");
   }
 );
 router.get(
-  "/list/transaction",
-  [auth, validations([idValidator().notEmpty()])],
+  "/list",
+  [auth, validations([idValidator("body", "userId").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getCategory(req, res, next, "tag");
   }

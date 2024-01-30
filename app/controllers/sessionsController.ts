@@ -7,10 +7,6 @@ import {
   errorNot,
   errorRequest,
   successNot,
-  notEdited,
-  success,
-  successAdds,
-  successAdd,
 } from "../services/responseStatusCodes";
 const newSession = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -43,7 +39,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const data = decode(authorization as string);
     if (typeof data !== "string" && data !== null) {
       users
-        .findOne({
+        .findAll({
           where: {
             email: data.email,
             password: data.password,
@@ -57,8 +53,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
           }
         })
         .catch((error) => {
-          res.send(errorRequest);
           errorLogger.error(error);
+          res.send(errorRequest);
         });
     }
   } catch (error) {
