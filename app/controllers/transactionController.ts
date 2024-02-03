@@ -84,8 +84,8 @@ const getTransaction = (
   myValue: string
 ) => {
   try {
-    const { id } = req.body;
-    getTransactionValue(id, myValue, res);
+    const { id } = req.params;
+    getTransactionValue(Number(id), myValue, res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
@@ -158,8 +158,8 @@ const getCategory = (
   myValue: string
 ) => {
   try {
-    const { userId } = req.body;
-    getCategoryValue(userId, myValue, res);
+    const { userId } = req.params;
+    getCategoryValue(Number(userId), myValue, res);
   } catch (error) {
     errorLogger.error(error);
     next(error);
