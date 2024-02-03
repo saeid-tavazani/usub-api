@@ -21,7 +21,7 @@ const validations = (validations: ValidationChain[]) => {
     res.status(400).json({
       errors: errors.array(),
       status: "error",
-      message: "Not valid!",
+      message: "معتبر نیست!",
       success: false,
     });
   };
@@ -43,7 +43,7 @@ const dateValidator = (
           return true;
         }
         if (!isValidDateFormat(value)) {
-          throw new Error("Invalid date format. Use YYYY-MM-DD");
+          throw new Error("قالب تاریخ نامعتبر است. از YYYY-MM-DD استفاده کنید");
         }
         return true;
       });
@@ -55,7 +55,7 @@ const dateValidator = (
         return true;
       }
       if (!isValidDateFormat(value)) {
-        throw new Error("Invalid date format. Use YYYY-MM-DD");
+        throw new Error("قالب تاریخ نامعتبر است. از YYYY-MM-DD استفاده کنید");
       }
       return true;
     });
@@ -68,13 +68,27 @@ const idValidator = (location = "body", valid = "id") => {
 };
 const passValidator = (location = "body", valid = "password") => {
   return location == "body"
-    ? body(valid).trim().isLength({ min: 8, max: 16 })
-    : param(valid).trim().isLength({ min: 8, max: 16 });
+    ? body(valid)
+        .trim()
+        .isLength({ min: 8, max: 16 })
+        .withMessage("پسورد حداقل 8 کاراکتر و حداکثر 16 کاراکتر باشد")
+    : param(valid)
+        .trim()
+        .isLength({ min: 8, max: 16 })
+        .withMessage("پسورد حداقل 8 کاراکتر و حداکثر 16 کاراکتر باشد");
 };
 const emailValidator = (location = "body", valid = "email") => {
   return location == "body"
-    ? body(valid).trim().isEmail().isLength({ max: 80 })
-    : param(valid).trim().isEmail().isLength({ max: 80 });
+    ? body(valid)
+        .trim()
+        .isEmail()
+        .isLength({ max: 80 })
+        .withMessage("ایمیل معتبر نیست")
+    : param(valid)
+        .trim()
+        .isEmail()
+        .isLength({ max: 80 })
+        .withMessage("ایمیل معتبر نیست");
 };
 const customMadeValidator = (valid: string, location = "body") => {
   return location == "body" ? body(valid).trim() : param(valid).trim();
@@ -95,7 +109,7 @@ const phoneNumberValidator = (
           return true;
         }
         if (!isIranianPhoneNumber(value)) {
-          throw new Error("Invalid Iranian phone number");
+          throw new Error("شماره تلفن باید با ۰۹ شروع شود و ۱۱ کاراکتر باشد");
         }
         return true;
       });
@@ -107,11 +121,12 @@ const phoneNumberValidator = (
         return true;
       }
       if (!isIranianPhoneNumber(value)) {
-        throw new Error("Invalid Iranian phone number");
+        throw new Error("شماره تلفن باید با ۰۹ شروع شود و ۱۱ کاراکتر باشد");
       }
       return true;
     });
 };
+
 const isIranianPhoneNumber = (value: string) => {
   return /^09\d{9}$/.test(value);
 };
