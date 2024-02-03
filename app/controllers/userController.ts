@@ -25,7 +25,7 @@ const newUser = (req: Request, res: Response, next: NextFunction) => {
           res.send({
             success: false,
             code: 400,
-            message: "There is a user with this phone number or email",
+            message: "کاربری با این شماره تلفن یا ایمیل وجود دارد",
           });
         } else {
           users
@@ -69,7 +69,7 @@ const editUser = (req: Request, res: Response, next: NextFunction) => {
           res.send({
             success: false,
             code: 400,
-            message: "There is a user with this phone number or email",
+            message: "کاربری با این شماره تلفن یا ایمیل وجود دارد",
           });
         } else {
           users
