@@ -112,7 +112,7 @@ router.get(
 );
 
 router.put(
-  "/list/transaction",
+  "/list",
   [
     auth,
     validations([
@@ -126,7 +126,7 @@ router.put(
   }
 );
 router.put(
-  "/contact/transaction",
+  "/contact",
   [
     auth,
     validations([
@@ -143,11 +143,13 @@ router.put(
 router.put(
   "/list/transaction",
   [
-    auth,
     validations([
       idValidator().notEmpty(),
-      idValidator("body", "userId").notEmpty(),
-      customMadeValidator("name").notEmpty(),
+      customMadeValidator("amount").notEmpty(),
+      customMadeValidator("type").notEmpty(),
+      customMadeValidator("title").notEmpty(),
+      dateValidator(true).notEmpty(),
+      customMadeValidator("description").notEmpty(),
     ]),
   ],
   (req: Request, res: Response, next: NextFunction) => {
@@ -160,9 +162,11 @@ router.put(
     auth,
     validations([
       idValidator().notEmpty(),
-      idValidator("body", "userId").notEmpty(),
-      customMadeValidator("name").notEmpty(),
+      customMadeValidator("amount").notEmpty(),
       customMadeValidator("type").notEmpty(),
+      customMadeValidator("title").notEmpty(),
+      dateValidator(true).notEmpty(),
+      customMadeValidator("description").notEmpty(),
     ]),
   ],
   (req: Request, res: Response, next: NextFunction) => {
@@ -185,7 +189,7 @@ router.delete(
   }
 );
 router.delete(
-  "/contact/transaction",
+  "/contact",
   [
     auth,
     validations([idValidator().notEmpty(), idValidator("body", "userId")]),
@@ -195,7 +199,7 @@ router.delete(
   }
 );
 router.delete(
-  "/list/transaction",
+  "/list",
   [
     auth,
     validations([idValidator().notEmpty(), idValidator("body", "userId")]),
