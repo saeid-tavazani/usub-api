@@ -63,8 +63,8 @@ const dateValidator = (
 
 const idValidator = (location = "body", valid = "id") => {
   return location == "body"
-    ? body(valid).trim().toInt().isInt()
-    : param(valid).trim().toInt().isInt();
+    ? body(valid).toInt()
+    : param(valid).toInt()
 };
 const passValidator = (location = "body", valid = "password") => {
   return location == "body"

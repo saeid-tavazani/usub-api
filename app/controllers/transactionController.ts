@@ -159,6 +159,9 @@ const getCategory = (
 ) => {
   try {
     const { userId } = req.params;
+    console.log('====================================');
+    console.log(userId);
+    console.log('====================================');
     getCategoryValue(Number(userId), myValue, res);
   } catch (error) {
     errorLogger.error(error);

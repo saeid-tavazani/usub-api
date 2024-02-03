@@ -83,28 +83,28 @@ router.post(
 );
 
 router.get(
-  "/contact",
+  "/contact/:userId",
   [auth, validations([idValidator("param", "userId").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getCategory(req, res, next, "contact");
   }
 );
 router.get(
-  "/list",
+  "/list/:userId",
   [auth, validations([idValidator("param", "userId").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getCategory(req, res, next, "tag");
   }
 );
 router.get(
-  "/contact/transaction",
+  "/contact/transaction/:id",
   [auth, validations([idValidator("param").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getTransaction(req, res, next, "contact");
   }
 );
 router.get(
-  "/list/transaction",
+  "/list/transaction/:id",
   [auth, validations([idValidator("param").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getTransaction(req, res, next, "tag");
