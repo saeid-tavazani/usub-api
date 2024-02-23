@@ -159,9 +159,9 @@ const getCategory = (
 ) => {
   try {
     const { userId } = req.params;
-    console.log('====================================');
+    console.log("====================================");
     console.log(userId);
-    console.log('====================================');
+    console.log("====================================");
     getCategoryValue(Number(userId), myValue, res);
   } catch (error) {
     errorLogger.error(error);
@@ -244,10 +244,13 @@ const updateTransaction = (
   }
 };
 
-const getTransactionValue = (id: number, type: string, res: Response, ms = success) => {
+const getTransactionValue = (
+  id: number,
+  type: string,
+  res: Response,
+  ms = success
+) => {
   // Ensure that associations use the same alias
-  category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-  transaction.belongsTo(category, { foreignKey: "type", as: "evnt" });
 
   category
     .findAll({
@@ -278,9 +281,9 @@ const getTransactionValue = (id: number, type: string, res: Response, ms = succe
     .catch((error) => {
       res.send(errorRequest);
       errorLogger.error(error);
-      console.log('====================================');
+      console.log("====================================");
       console.log(error);
-      console.log('====================================');
+      console.log("====================================");
     });
 };
 
@@ -290,13 +293,11 @@ const getCategoryValue = (
   res: Response,
   ms = success
 ) => {
-  // category.hasMany(transaction, { foreignKey: "type", as: "evnt" });
-  // transaction.belongsTo(category, { foreignKey: "type", as: "evnts" });
   category
     .findAll({
       where: {
-        "$category.category$": type,
-        "$category.userId$": id,
+        category: type,
+        userId: id,
       },
     })
     .then((response) => {
@@ -314,7 +315,6 @@ const getCategoryValue = (
     .catch((error) => {
       res.send(errorRequest);
       errorLogger.error(error);
-     
     });
 };
 
@@ -325,7 +325,6 @@ export {
   deletCategory,
   getCategory,
   updateCategory,
-  // updateCategoryList,
   updateTransaction,
   newTransaction,
 };
