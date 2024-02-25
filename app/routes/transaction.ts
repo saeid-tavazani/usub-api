@@ -14,6 +14,7 @@ import {
   getTransaction,
   getCategory,
   updateCategory,
+  getUserTransaction,
   updateTransaction,
 } from "../controllers/transactionController";
 
@@ -108,6 +109,14 @@ router.get(
   [auth, validations([idValidator("param").notEmpty()])],
   (req: Request, res: Response, next: NextFunction) => {
     getTransaction(req, res, next, "tag");
+  }
+);
+
+router.get(
+  "/user/transaction/:id",
+  [auth, validations([idValidator("param").notEmpty()])],
+  (req: Request, res: Response, next: NextFunction) => {
+    getUserTransaction(req, res, next);
   }
 );
 

@@ -9,6 +9,7 @@ import {
   successAdd,
   success,
 } from "../services/responseStatusCodes";
+import { sequelize, QueryTypes } from "../models";
 
 category.hasMany(transaction, { foreignKey: "type", as: "categoryEvnt" });
 transaction.belongsTo(category, { foreignKey: "type", as: "transactionEvnt" });
@@ -91,6 +92,38 @@ const getTransaction = (
     next(error);
   }
 };
+
+const getUserTransaction = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    sequelize
+      .query(
+        "SELECT transactions.* FROM `categories` INNER JOIN `transactions` ON categories.id = transactions.type WHERE categories.userId=:search_user",
+        {
+          replacements: { search_user: id },
+          type: QueryTypes.SELECT,
+        }
+      )
+      .then((response) => {
+        res.send(response);
+      })
+      .catch((error) => {
+        res.send(errorRequest);
+        errorLogger.error(error);
+      });
+
+    // getTransactionValue(Number(id), myValue, res);
+  } catch (error) {
+    errorLogger.error(error);
+    next(error);
+  }
+};
+
 const deletTransaction = (
   req: Request,
   res: Response,
@@ -327,4 +360,5 @@ export {
   updateCategory,
   updateTransaction,
   newTransaction,
+  getUserTransaction,
 };
